@@ -1,7 +1,10 @@
 import { app, BrowserWindow } from "electron";
-import macAddress from "macaddress";
 import { connect, subscribe } from "./electron/pubSub";
-import { createBrowserWindow, loadURL } from "./electron/browser";
+import {
+  createBrowserWindow,
+  loadURL,
+  screenCapture,
+} from "./electron/browser";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { DEFAULT_URL } from "./constants";
 
@@ -17,15 +20,16 @@ let connection: MqttClientConnection;
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  const deviceId = await macAddress.one();
-  console.log({ deviceId });
-  connection = await connect(deviceId);
+  connection = await connect();
 
   const browserWindow = await createBrowserWindow();
+  //@TODO move to constants
+  await subscribe("loadURL", loadURL(browserWindow));
+  await subscribe("screenCapture", screenCapture(browserWindow));
+
   const url = process.env.KIOSK_URL || DEFAULT_URL;
 
   await browserWindow.loadURL(url.toString());
-  subscribe(deviceId, "loadURL", loadURL(browserWindow));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

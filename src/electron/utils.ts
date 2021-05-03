@@ -1,4 +1,4 @@
-export const isJsonString = (string) => {
+export const isJsonString = (string: string): boolean => {
   try {
     JSON.parse(string);
   } catch (e) {
@@ -7,7 +7,7 @@ export const isJsonString = (string) => {
   return true;
 };
 
-export const isUrl = (string) => {
+export const isUrl = (string: string): boolean => {
   try {
     return Boolean(new URL(string));
   } catch (e) {

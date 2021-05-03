@@ -1,42 +1,57 @@
-import { Iot } from "aws-sdk";
 import { isJsonString } from "./utils";
-import AWS_CONFIG from "../../.aws.json";
 import { TextDecoder } from "util";
+import { IoTClient, DescribeEndpointCommand } from "@aws-sdk/client-iot";
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
+import { CrtError } from "aws-crt/dist/native/error";
+import macAddress from "macaddress";
+import { AWS_CONFIG } from "../constants";
 
 let connection: MqttClientConnection;
+let deviceId: string;
 
 const getIoTEndpoint = async (): Promise<string> => {
   // Each AWS account has a unique IoT endpoint per region. We need to retrieve this value:
-  const iota = new Iot({
-    ...AWS_CONFIG,
-  });
-  const response = await iota
-    .describeEndpoint({ endpointType: "iot:Data-ATS" })
-    .promise();
+  const iota = new IoTClient(AWS_CONFIG);
+  const response = await iota.send(
+    new DescribeEndpointCommand({ endpointType: "iot:Data-ATS" }) //@TODO move to constants
+  );
 
   return response.endpointAddress;
 };
 
-export const subscribe = (
-  deviceId: string,
+export const publish = async (
   channel: string,
-  callback: any
-): void => {
+  payload: string
+): Promise<void> => {
   try {
-    connection.subscribe(
+    await connection.publish(
+      `${deviceId}/${channel}`,
+      payload,
+      mqtt.QoS.AtLeastOnce
+    );
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const subscribe = async (
+  channel: string,
+  callback: any //@TODO define the type
+): Promise<void> => {
+  try {
+    await connection.subscribe(
       `${deviceId}/${channel}`,
       mqtt.QoS.AtLeastOnce,
-      (topic: any, payload: any, dup: any, qos: any, retain: any) => {
-        const decoder = new TextDecoder("utf8");
+      async (topic: string, payload: ArrayBuffer) => {
+        const decoder = new TextDecoder("utf8"); //@TODO move to constants
         const message = decoder.decode(new Uint8Array(payload));
 
         console.log(`Message received: topic=${topic} ${message}`);
 
         if (typeof callback === "function") {
           const data = isJsonString(message) ? JSON.parse(message) : message;
-          callback(data);
+          callback({ deviceId, data });
         }
       }
     );
@@ -45,22 +60,26 @@ export const subscribe = (
   }
 };
 
-export const connect = async (
-  deviceId: string
-): Promise<MqttClientConnection> => {
+export const connect = async (): Promise<MqttClientConnection> => {
   const iotEndpoint = await getIoTEndpoint();
-  console.log(iotEndpoint);
+
+  deviceId = await macAddress.one();
+
+  console.log({ deviceId });
+
   return new Promise((resolve, reject) => {
     const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
       .with_clean_session(true)
       .with_client_id(deviceId)
       .with_endpoint(iotEndpoint)
       .with_credentials(
-        AWS_CONFIG.region,
-        AWS_CONFIG.accessKeyId,
-        AWS_CONFIG.secretAccessKey
+        //@TODO replace with certs
+        process.env.AWS_REGION,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
       )
       .build();
+
     const client_bootstrap = new io.ClientBootstrap();
 
     console.log("Connecting websocket...");
@@ -72,19 +91,26 @@ export const connect = async (
       console.log("connected!");
       resolve(connection);
     });
-    connection.on("interrupt", (error: any) => {
+    connection.on("interrupt", (error: CrtError) => {
       console.log(`Connection interrupted: error=${error}`);
     });
-    connection.on("resume", (code: any, session: any) => {
+    connection.on("resume", (code: number, session: boolean) => {
       console.log(`Resumed: rc: ${code} existing session: ${session}`);
     });
     connection.on("disconnect", () => {
       console.log("Disconnected");
     });
-    connection.on("error", (error: any) => {
+    connection.on("error", (error: CrtError) => {
       console.log("failed");
       reject(error);
     });
     connection.connect();
   });
+};
+
+export const screenCapture = async (
+  browserWindow: Electron.BrowserWindow
+): Promise<Buffer> => {
+  const image = await browserWindow.webContents.capturePage();
+  return image.toBitmap();
 };
