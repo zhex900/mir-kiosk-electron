@@ -1,10 +1,9 @@
-import { isJsonString } from "./utils";
+import { getDeviceId, isJsonString } from "./utils";
 import { TextDecoder } from "util";
 import { IoTClient, DescribeEndpointCommand } from "@aws-sdk/client-iot";
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { CrtError } from "aws-crt/dist/native/error";
-import macAddress from "macaddress";
 import { AWS_CONFIG } from "../constants";
 
 let connection: MqttClientConnection;
@@ -63,10 +62,8 @@ export const subscribe = async (
 export const connect = async (): Promise<MqttClientConnection> => {
   const iotEndpoint = await getIoTEndpoint();
 
-  deviceId = await macAddress.one();
-
+  deviceId = await getDeviceId();
   console.log({ deviceId });
-
   return new Promise((resolve, reject) => {
     const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
       .with_clean_session(true)
@@ -106,11 +103,4 @@ export const connect = async (): Promise<MqttClientConnection> => {
     });
     connection.connect();
   });
-};
-
-export const screenCapture = async (
-  browserWindow: Electron.BrowserWindow
-): Promise<Buffer> => {
-  const image = await browserWindow.webContents.capturePage();
-  return image.toBitmap();
 };

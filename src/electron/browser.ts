@@ -17,6 +17,7 @@ interface data {
   };
   deviceId: string;
 }
+
 export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => {
   // Create the browser window.
   let browserWindow = new BrowserWindow({
@@ -49,14 +50,13 @@ export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
   }
 };
 
-const s3 = new S3Client(AWS_CONFIG);
-
 export const screenCapture = (browserWindow: Electron.BrowserWindow) => async ({
   deviceId,
 }: data): Promise<void> => {
+  const s3 = new S3Client(AWS_CONFIG);
   const image = await browserWindow.webContents.capturePage();
   try {
-    const imageName = `${deviceId}.png`;
+    const imageName = `${deviceId}/screenshot.png`;
     const response = await s3.send(
       new PutObjectCommand({
         Bucket: SCREENSHOT_S3_BUCKET,
@@ -77,9 +77,9 @@ export const screenCapture = (browserWindow: Electron.BrowserWindow) => async ({
       );
       //@TODO move to constants
       await publish("screenCaptureResult", JSON.stringify({ url }));
+    } else {
+      await publish("screenCaptureResult", JSON.stringify({ error: response }));
     }
-
-    await publish("screenCaptureResult", JSON.stringify({ error: response }));
   } catch (error) {
     console.error(error);
     await publish("screenCaptureResult", JSON.stringify({ error }));
