@@ -34,8 +34,9 @@ parts:
     plugin: nil
     source: https://github.com/zhex900/mir-kiosk-electron.git
     override-build: |
+      cd electron-kiosk
+      mv snap/* .
       chmod +x glue/electron.launcher
-      cp -r kiosk/* .
       npm config set scripts-prepend-node-path true
       npm install --unsafe-perm=true
       ./node_modules/.bin/electron-packager . --overwrite \

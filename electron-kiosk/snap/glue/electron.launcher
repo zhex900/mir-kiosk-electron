@@ -1,9 +1,19 @@
 #!/bin/bash
 
 # Get URL
-url="$(snapctl get url)"
+URL="$(snapctl get URL)"
+IOT_ENDPOINT="$(snapctl get IOT_ENDPOINT)"
+AWS_REGION="$(snapctl get AWS_REGION)"
+AWS_KEY="$(snapctl get AWS_KEY)"
+AWS_SECRET="$(snapctl get AWS_SECRET)"
+AWS_S3_BUCKET="$(snapctl get AWS_S3_BUCKET)"
 
-export KIOSK_URL=${url}
+export KIOSK_URL=${URL}
+export KIOSK_URL=${IOT_ENDPOINT}
+export KIOSK_URL=${AWS_REGION}
+export KIOSK_URL=${AWS_KEY}
+export KIOSK_URL=${AWS_SECRET}
+export KIOSK_URL=${AWS_S3_BUCKET}
 
 "$SNAP/mir-kiosk-electron/mir-kiosk-electron" --no-sandbox
 
