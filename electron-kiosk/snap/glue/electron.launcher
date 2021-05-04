@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Get URL
+url="$(snapctl get url)"
+
+export KIOSK_URL=${url}
+
+"$SNAP/mir-kiosk-electron/mir-kiosk-electron" --no-sandbox
+

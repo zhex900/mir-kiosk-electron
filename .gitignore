@@ -1,9 +1,13 @@
+.aws-sam
+samconfig.toml
+examples
 .aws.json
 dist
 .idea
 # Logs
 logs
 *.log
+packages
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
