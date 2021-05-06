@@ -5,18 +5,22 @@ import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { CrtError } from "aws-crt/dist/native/error";
 import { AWS_CONFIG } from "../constants";
-console.log({AWS_CONFIG})
+console.log({ AWS_CONFIG });
 let connection: MqttClientConnection;
 let deviceId: string;
 
 const getIoTEndpoint = async (): Promise<string> => {
-  // Each AWS account has a unique IoT endpoint per region. We need to retrieve this value:
-  const iota = new IoTClient(AWS_CONFIG);
-  const response = await iota.send(
-    new DescribeEndpointCommand({ endpointType: "iot:Data-ATS" }) //@TODO move to constants
-  );
+  try {
+    // Each AWS account has a unique IoT endpoint per region. We need to retrieve this value:
+    const iota = new IoTClient(AWS_CONFIG);
+    const response = await iota.send(
+      new DescribeEndpointCommand({ endpointType: "iot:Data-ATS" }) //@TODO move to constants
+    );
 
-  return response.endpointAddress;
+    return response.endpointAddress;
+  } catch (e) {
+    return "";
+  }
 };
 
 export const publish = async (
@@ -65,6 +69,13 @@ export const connect = async (): Promise<MqttClientConnection> => {
   deviceId = await getDeviceId();
   console.log({ deviceId, iotEndpoint });
   return new Promise((resolve, reject) => {
+    if (
+      !process.env.AWS_REGION ||
+      !process.env.AWS_KEY ||
+      !process.env.AWS_SECRET
+    ) {
+      reject("No AWS credentials");
+    }
     const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
       .with_clean_session(true)
       .with_client_id(deviceId)
@@ -77,11 +88,11 @@ export const connect = async (): Promise<MqttClientConnection> => {
       )
       .build();
 
-    const client_bootstrap = new io.ClientBootstrap();
+    const clientBootstrap = new io.ClientBootstrap();
 
     console.log("Connecting websocket...");
 
-    const client = new mqtt.MqttClient(client_bootstrap);
+    const client = new mqtt.MqttClient(clientBootstrap);
 
     connection = client.new_connection(config);
     connection.on("connect", () => {

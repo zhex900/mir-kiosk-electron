@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { BrowserWindow } from "electron";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -10,7 +9,7 @@ import { publish } from "./pubSub";
 import { AWS_CONFIG, SCREEN_SIZE, SCREENSHOT_S3_BUCKET } from "../constants";
 import { isUrl } from "./utils";
 
-interface data {
+interface Data {
   data: {
     url?: string;
   };
@@ -40,8 +39,7 @@ export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => 
 
 export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
   data: { url },
-}: data): Promise<void> => {
-
+}: Data): Promise<void> => {
   if (isUrl(url)) {
     await browserWindow.loadURL(url);
   }
@@ -49,10 +47,11 @@ export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
 
 export const screenCapture = (browserWindow: Electron.BrowserWindow) => async ({
   deviceId,
-}: data): Promise<void> => {
-  const s3 = new S3Client(AWS_CONFIG);
-  const image = await browserWindow.webContents.capturePage();
+}: Data): Promise<void> => {
   try {
+    const s3 = new S3Client(AWS_CONFIG);
+    const image = await browserWindow.webContents.capturePage();
+
     const imageName = `${deviceId}/screenshot.png`;
     const response = await s3.send(
       new PutObjectCommand({

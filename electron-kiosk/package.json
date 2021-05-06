@@ -1,11 +1,11 @@
 {
-  "name": "my-new-app",
-  "productName": "my-new-app",
+  "name": "mir-kiosk-electron",
+  "productName": "mir-kiosk-electron",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "dist/index.js",
   "scripts": {
-    "start": "set NODE_ENV=development && tsc && electron-forge start",
+    "start": "tsc && electron-forge start",
     "package": "tsc && electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

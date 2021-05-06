@@ -1,9 +1,9 @@
 import {
-    APIGatewayProxyEvent,
-    APIGatewayProxyResult,
-    Context,
-    Handler,
-} from 'aws-lambda';
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Context,
+  Handler,
+} from "aws-lambda";
 
 let response: APIGatewayProxyResult;
 
@@ -19,19 +19,22 @@ let response: APIGatewayProxyResult;
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  *
  */
-export const lambdaHandler: Handler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
-    try {
-        response = {
-            statusCode: 200,
-            body: JSON.stringify(       {
-                message: 'hello world',
-                version: context.functionVersion,
-            }),
-        };
-    } catch (err) {
-        // console.log(err);
-        return err;
-    }
+export const lambdaHandler: Handler = async (
+  event: APIGatewayProxyEvent,
+  context: Context
+): Promise<APIGatewayProxyResult> => {
+  try {
+    response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "hello world",
+        version: context.functionVersion,
+      }),
+    };
+  } catch (err) {
+    // console.log(err);
+    return err;
+  }
 
-    return response;
+  return response;
 };
