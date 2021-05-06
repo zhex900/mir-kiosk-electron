@@ -5,7 +5,7 @@ import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { CrtError } from "aws-crt/dist/native/error";
 import { AWS_CONFIG } from "../constants";
-
+console.log({AWS_CONFIG})
 let connection: MqttClientConnection;
 let deviceId: string;
 
@@ -63,7 +63,7 @@ export const connect = async (): Promise<MqttClientConnection> => {
   const iotEndpoint = await getIoTEndpoint();
 
   deviceId = await getDeviceId();
-  console.log({ deviceId });
+  console.log({ deviceId, iotEndpoint });
   return new Promise((resolve, reject) => {
     const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
       .with_clean_session(true)

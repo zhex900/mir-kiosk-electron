@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { BrowserWindow } from "electron";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -8,8 +9,6 @@ import {
 import { publish } from "./pubSub";
 import { AWS_CONFIG, SCREEN_SIZE, SCREENSHOT_S3_BUCKET } from "../constants";
 import { isUrl } from "./utils";
-
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 interface data {
   data: {
@@ -36,15 +35,13 @@ export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => 
     browserWindow = null;
   });
 
-  // and load the index.html of the app.
-  await browserWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   return browserWindow;
 };
 
 export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
   data: { url },
 }: data): Promise<void> => {
-  console.log({ url });
+
   if (isUrl(url)) {
     await browserWindow.loadURL(url);
   }

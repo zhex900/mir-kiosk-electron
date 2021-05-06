@@ -1,5 +1,5 @@
-import macAddress from "macaddress";
-import os from "os";
+import * as macAddress from "macaddress";
+import * as os from "os";
 
 export const isJsonString = (string: string): boolean => {
   try {

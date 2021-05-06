@@ -11,20 +11,5 @@
       "plugin:import/errors",
       "plugin:import/warnings"
     ],
-    "parser": "@typescript-eslint/parser",
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
-  },
-  "overrides": [
-    {
-      "files": ["*.js"],
-      "rules": {
-        "@typescript-eslint/no-var-requires": "off"
-      }
-    }
-  ]
+    "parser": "@typescript-eslint/parser"
 }

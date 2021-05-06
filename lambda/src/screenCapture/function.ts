@@ -23,7 +23,7 @@ export const lambdaHandler: Handler = async (event: APIGatewayProxyEvent, contex
     try {
         response = {
             statusCode: 200,
-            body: JSON.stringify({
+            body: JSON.stringify(       {
                 message: 'hello world',
                 version: context.functionVersion,
             }),

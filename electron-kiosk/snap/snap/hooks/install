@@ -1,5 +1,0 @@
-#!/bin/sh -e
-
-# Initialize the URL to a default
-snapctl set \
-    url="https://www.ubuntu.com/internet-of-things" 
