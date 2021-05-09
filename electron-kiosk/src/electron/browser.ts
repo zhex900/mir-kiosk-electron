@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron";
 import { SCREEN_SIZE } from "../constants";
 import { isUrl } from "./utils";
-import fetch from "node-fetch";
+import axios from "axios";
 
 interface Data {
   data: {
@@ -47,13 +47,13 @@ export const screenCapture = (browserWindow: Electron.BrowserWindow) => async (
     console.log({ data });
     const image = await browserWindow.webContents.capturePage();
     const quality = data.data.quality || 50;
-    const response = await fetch(data.data.url, {
-      method: "PUT",
-      body: image.toJPEG(quality),
+
+    const response = await axios.put(data.data.url, image.toJPEG(quality), {
       headers: {
-        "Content-Type": "image/jpeg",
+        "Content-Type": "image/png",
       },
     });
+
     console.log({ response });
   } catch (error) {
     console.error({ error });
