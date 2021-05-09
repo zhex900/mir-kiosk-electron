@@ -1,17 +1,12 @@
 import { BrowserWindow } from "electron";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
-import { publish } from "./pubSub";
-import { AWS_CONFIG, SCREEN_SIZE, SCREENSHOT_S3_BUCKET } from "../constants";
+import { SCREEN_SIZE } from "../constants";
 import { isUrl } from "./utils";
+import fetch from "node-fetch";
 
 interface Data {
   data: {
     url?: string;
+    quality?: number;
   };
   deviceId: string;
 }
@@ -45,39 +40,22 @@ export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
   }
 };
 
-export const screenCapture = (browserWindow: Electron.BrowserWindow) => async ({
-  deviceId,
-}: Data): Promise<void> => {
+export const screenCapture = (browserWindow: Electron.BrowserWindow) => async (
+  data: Data
+): Promise<void> => {
   try {
-    const s3 = new S3Client(AWS_CONFIG);
+    console.log({ data });
     const image = await browserWindow.webContents.capturePage();
-
-    const imageName = `${deviceId}/screenshot.png`;
-    const response = await s3.send(
-      new PutObjectCommand({
-        Bucket: SCREENSHOT_S3_BUCKET,
-        Key: imageName,
-        Body: image.toPNG(),
-        ContentType: "image/png",
-      })
-    );
-
-    if (response["$metadata"].httpStatusCode === 200) {
-      const url = await getSignedUrl(
-        s3,
-        new GetObjectCommand({
-          Bucket: SCREENSHOT_S3_BUCKET,
-          Key: imageName,
-        }),
-        { expiresIn: 3600 }
-      );
-      //@TODO move to constants
-      await publish("screenCaptureResult", JSON.stringify({ url }));
-    } else {
-      await publish("screenCaptureResult", JSON.stringify({ error: response }));
-    }
+    const quality = data.data.quality || 50;
+    const response = await fetch(data.data.url, {
+      method: "PUT",
+      body: image.toJPEG(quality),
+      headers: {
+        "Content-Type": "image/jpeg",
+      },
+    });
+    console.log({ response });
   } catch (error) {
-    console.error(error);
-    await publish("screenCaptureResult", JSON.stringify({ error }));
+    console.error({ error });
   }
 };

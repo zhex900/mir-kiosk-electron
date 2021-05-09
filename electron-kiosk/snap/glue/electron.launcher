@@ -2,18 +2,14 @@
 
 # Get URL
 URL="$(snapctl get url)"
-IOT_ENDPOINT="$(snapctl get iotendpoint)"
 AWS_REGION="$(snapctl get awsregion)"
 AWS_KEY="$(snapctl get awskey)"
 AWS_SECRET="$(snapctl get awssecret)"
-AWS_S3_BUCKET="$(snapctl get awss3bucket)"
 
 export KIOSK_URL=${URL}
-export IOT_ENDPOINT=${IOT_ENDPOINT}
 export AWS_REGION=${AWS_REGION}
 export AWS_KEY=${AWS_KEY}
 export AWS_SECRET=${AWS_SECRET}
-export AWS_S3_BUCKET=${AWS_S3_BUCKET}
 
 "$SNAP/mir-kiosk-electron/mir-kiosk-electron" --no-sandbox
 

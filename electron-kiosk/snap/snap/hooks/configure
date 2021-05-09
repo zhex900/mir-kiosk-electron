@@ -29,6 +29,5 @@ validate() {
 }
 
 validate_url    $(snapctl get url)
-validate        $(snapctl get iotendpoint)
 
 snapctl restart $SNAP_NAME
