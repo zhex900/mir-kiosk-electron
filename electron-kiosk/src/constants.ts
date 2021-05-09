@@ -5,8 +5,6 @@ export const SCREEN_SIZE = {
 
 export const DEFAULT_URL = "https://github.com";
 
-export const SCREENSHOT_S3_BUCKET = "kiosk-screenshot";
-
 export const AWS_CONFIG = {
   region: process.env.AWS_REGION,
   credentials: {
