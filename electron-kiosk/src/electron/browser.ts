@@ -35,8 +35,12 @@ export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => 
 export const loadURL = (browserWindow: Electron.BrowserWindow) => async ({
   data: { url },
 }: Data): Promise<void> => {
-  if (isUrl(url)) {
-    await browserWindow.loadURL(url);
+  try {
+    if (isUrl(url)) {
+      await browserWindow.loadURL(url);
+    }
+  } catch (e) {
+    console.log("loadURL", e);
   }
 };
 
