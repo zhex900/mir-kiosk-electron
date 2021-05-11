@@ -18,17 +18,17 @@ let connection: MqttClientConnection;
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  const browserWindow = await createBrowserWindow();
   try {
+    const browserWindow = await createBrowserWindow();
     connection = await connect();
     //@TODO move to constants
     await subscribe("loadURL", loadURL(browserWindow));
     await subscribe("screenCapture", screenCapture(browserWindow));
+    const url = process.env.KIOSK_URL || DEFAULT_URL;
+    await browserWindow.loadURL(url);
   } catch (e) {
     console.log({ e });
   }
-  const url = process.env.KIOSK_URL || DEFAULT_URL;
-  await browserWindow.loadURL(url);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
