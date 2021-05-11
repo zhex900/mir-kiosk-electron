@@ -4,7 +4,7 @@ import { IoTClient, DescribeEndpointCommand } from "@aws-sdk/client-iot";
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { CrtError } from "aws-crt/dist/native/error";
-import { AWS_CONFIG } from "../constants";
+import { AWS_CONFIG, MAX_RETRY, RETRY_WAIT_TIME } from "../constants";
 console.log({ AWS_CONFIG });
 let connection: MqttClientConnection;
 let deviceId: string;
@@ -109,9 +109,26 @@ export const connect = async (): Promise<MqttClientConnection> => {
       console.log("Disconnected");
     });
     connection.on("error", (error: CrtError) => {
-      console.log("failed");
-      reject(error);
+      console.log("connection failed", error);
+      resolve(null);
     });
     connection.connect();
   });
+};
+
+const waitForSeconds = (seconds: number): Promise<void> =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), seconds * 1000);
+  });
+
+export const connectWithRetry = async (
+  retryAttempt: number
+): Promise<MqttClientConnection> => {
+  const connection = await connect();
+  if (!connection && retryAttempt < MAX_RETRY) {
+    console.log("RETRY", retryAttempt);
+    await waitForSeconds(RETRY_WAIT_TIME);
+    return connectWithRetry(retryAttempt + 1);
+  }
+  return connection;
 };

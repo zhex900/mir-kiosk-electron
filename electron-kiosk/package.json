@@ -65,6 +65,6 @@
     "@aws-sdk/client-iot": "^3.14.0",
     "aws-iot-device-sdk-v2": "^1.4.5",
     "axios": "^0.21.1",
-    "macaddress": "^0.5.2"
+    "systeminformation": "^5.6.20"
   }
 }

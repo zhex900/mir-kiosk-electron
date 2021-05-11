@@ -3,7 +3,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 import { app, BrowserWindow } from "electron";
-import { connect, subscribe } from "./electron/pubSub";
+import { connect, connectWithRetry, subscribe } from "./electron/pubSub";
 import {
   createBrowserWindow,
   loadURL,
@@ -20,14 +20,21 @@ let connection: MqttClientConnection;
 app.on("ready", async () => {
   try {
     const browserWindow = await createBrowserWindow();
-    connection = await connect();
-    //@TODO move to constants
-    await subscribe("loadURL", loadURL(browserWindow));
-    await subscribe("screenCapture", screenCapture(browserWindow));
-    const url = process.env.KIOSK_URL || DEFAULT_URL;
-    await browserWindow.loadURL(url);
+    connection = await connectWithRetry(0); // @TODO retry to connect
+    if (connection) {
+      //@TODO move to constants
+      await subscribe("loadURL", loadURL(browserWindow));
+      await subscribe("screenCapture", screenCapture(browserWindow));
+      console.log("loading window");
+      const url = process.env.KIOSK_URL || DEFAULT_URL;
+      await browserWindow.loadURL(url);
+    } else {
+      app.quit();
+      // no internet connection
+      process.exit(0);
+    }
   } catch (e) {
-    console.log({ e });
+    console.log("ready error", { e });
   }
 });
 

@@ -12,3 +12,7 @@ export const AWS_CONFIG = {
     secretAccessKey: process.env.AWS_SECRET,
   },
 };
+
+export const MAX_RETRY = 20;
+
+export const RETRY_WAIT_TIME = 3; //seconds

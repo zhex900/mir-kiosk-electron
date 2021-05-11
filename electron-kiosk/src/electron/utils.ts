@@ -1,6 +1,6 @@
-import * as macAddress from "macaddress";
-import * as os from "os";
+import { osInfo } from "systeminformation";
 
+// macAddress.all().then((a) => console.log(a));
 export const isJsonString = (string: string): boolean => {
   try {
     JSON.parse(string);
@@ -18,7 +18,7 @@ export const isUrl = (string: string): boolean => {
   }
 };
 
-export const getDeviceId = async (): Promise<string> =>
-  `${os.hostname()}-${await macAddress.one()}`
-    .toLocaleLowerCase()
-    .replace(/ /g, ".");
+export const getDeviceId = async (): Promise<string> => {
+  const { serial, hostname } = await osInfo();
+  return `${hostname}-${serial}`.toLocaleLowerCase().replace(/ /g, ".");
+};
