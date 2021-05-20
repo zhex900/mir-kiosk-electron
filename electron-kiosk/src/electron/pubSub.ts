@@ -68,18 +68,6 @@ const waitForSeconds = (seconds: number): Promise<void> =>
     setTimeout(() => resolve(), seconds * 1000);
   });
 
-export const retry = async (retryAttempt: number): Promise<boolean> => {
-  await waitForSeconds(RETRY_WAIT_TIME);
-  const result = await connection.connect();
-
-  if (!result && retryAttempt < MAX_RETRY) {
-    console.log("RETRY", retryAttempt);
-
-    return retry(retryAttempt + 1);
-  }
-  return result;
-};
-
 export const connect = async (): Promise<MqttClientConnection> => {
   const iotEndpoint = await getIoTEndpoint();
 
@@ -118,15 +106,11 @@ export const connect = async (): Promise<MqttClientConnection> => {
     });
     connection.on("interrupt", async (error: CrtError) => {
       console.log(`Connection interrupted: error=${error}`);
-      if (!(await retry(MAX_RETRY))) {
-        process.exit(0);
-      }
+      process.exit(0);
     });
     connection.on("resume", async (code: number, session: boolean) => {
       console.log(`Resumed: rc: ${code} existing session: ${session}`);
-      if (!(await retry(MAX_RETRY))) {
-        process.exit(0);
-      }
+      process.exit(0);
     });
     connection.on("disconnect", () => {
       console.log("Disconnected");
