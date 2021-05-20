@@ -83,6 +83,7 @@ export const connect = async (): Promise<MqttClientConnection> => {
     }
     const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
       .with_clean_session(true)
+      .with_keep_alive_seconds(30)
       .with_client_id(deviceId)
       .with_endpoint(iotEndpoint)
       .with_credentials(
