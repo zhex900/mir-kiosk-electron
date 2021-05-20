@@ -11,6 +11,7 @@ compression: lzo
 apps:
   mir-kiosk-electron:
     daemon: simple
+    stop-timeout: 1m
     extensions: [ gnome-3-28 ]
     restart-condition: always
     command: snap/command-chain/desktop-launch xwayland-kiosk-launch electron.launcher
