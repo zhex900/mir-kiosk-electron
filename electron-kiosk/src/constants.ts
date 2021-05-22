@@ -17,5 +17,5 @@ export const MAX_RETRY = 20;
 
 export const RETRY_WAIT_TIME = 3; //seconds
 
-export const KEY = "/snap/mir-kiosk-electron/certs/private.key";
-export const CERTIFICATE = "/snap/mir-kiosk-electron/certificate.pem";
+export const KEY = `${process.env.CERT_PATH}/private.key`;
+export const CERTIFICATE = `${process.env.CERT_PATH}/certificate.pem`;

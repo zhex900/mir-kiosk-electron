@@ -37,6 +37,8 @@ parts:
     source: https://github.com/zhex900/mir-kiosk-electron.git
     override-build: |
       cd electron-kiosk
+      cp -r /root/stage/certs $SNAPCRAFT_PART_INSTALL/certs
+      ls $SNAPCRAFT_PART_INSTALL/
       cp -r snap snap_copy
       rm -rf snap 
       cp -r snap_copy/* .
@@ -46,8 +48,7 @@ parts:
       npm run package
       ls
       cp -R ./out/mir-kiosk-electron-linux-* $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron
-      cp -r /root/stage/certs $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron/certs
-      ls $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron/certs
+
     stage-packages:
       - libnspr4
       - libnss3
