@@ -6,6 +6,7 @@ IOT_ENDPOINT="$(snapctl get iotendpoint)"
 
 export KIOSK_URL=${URL}
 export IOT_ENDPOINT=${IOT_ENDPOINT}
+export CERT_PATH="$SNAP/mir-kiosk-electron/certs"
 
 "$SNAP/mir-kiosk-electron/mir-kiosk-electron" --no-sandbox
 
