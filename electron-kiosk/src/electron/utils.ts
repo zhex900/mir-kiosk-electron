@@ -18,8 +18,6 @@ export const isUrl = (string: string): boolean => {
   }
 };
 
-export const getDeviceId = async (): Promise<string> => {
-  return `${hostname()}-${await machineId(true)}`
-    .toLocaleLowerCase()
-    .replace(/ /g, ".");
+export const getDeviceId = (): string => {
+  return hostname().toLocaleLowerCase().replace(/ /g, ".");
 };

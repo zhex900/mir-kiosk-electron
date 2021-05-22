@@ -1,27 +1,12 @@
 import { getDeviceId, isJsonString } from "./utils";
 import { TextDecoder } from "util";
-import { IoTClient, DescribeEndpointCommand } from "@aws-sdk/client-iot";
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import { CrtError } from "aws-crt/dist/native/error";
-import { AWS_CONFIG, MAX_RETRY, RETRY_WAIT_TIME } from "../constants";
-console.log({ AWS_CONFIG });
+import { MAX_RETRY, RETRY_WAIT_TIME, CERTIFICATE, KEY } from "../constants";
+
 let connection: MqttClientConnection;
 let deviceId: string;
-
-const getIoTEndpoint = async (): Promise<string> => {
-  try {
-    // Each AWS account has a unique IoT endpoint per region. We need to retrieve this value:
-    const iota = new IoTClient(AWS_CONFIG);
-    const response = await iota.send(
-      new DescribeEndpointCommand({ endpointType: "iot:Data-ATS" }) //@TODO move to constants
-    );
-
-    return response.endpointAddress;
-  } catch (e) {
-    return "";
-  }
-};
 
 export const publish = async (
   channel: string,
@@ -69,29 +54,20 @@ const waitForSeconds = (seconds: number): Promise<void> =>
   });
 
 export const connect = async (): Promise<MqttClientConnection> => {
-  const iotEndpoint = await getIoTEndpoint();
-
-  deviceId = await getDeviceId();
-  console.log({ deviceId, iotEndpoint });
+  deviceId = getDeviceId();
+  console.log({ deviceId }, process.env.IOT_ENDPOINT);
   return new Promise((resolve, reject) => {
-    if (
-      !process.env.AWS_REGION ||
-      !process.env.AWS_KEY ||
-      !process.env.AWS_SECRET
-    ) {
-      reject("No AWS credentials");
+    if (!process.env.IOT_ENDPOINT) {
+      reject("No IoT endpoint");
     }
-    const config = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
+    const config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
+      CERTIFICATE,
+      KEY
+    )
       .with_clean_session(true)
       .with_keep_alive_seconds(30)
       .with_client_id(deviceId)
-      .with_endpoint(iotEndpoint)
-      .with_credentials(
-        //@TODO replace with certs
-        process.env.AWS_REGION,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-      )
+      .with_endpoint(process.env.IOT_ENDPOINT)
       .build();
 
     const clientBootstrap = new io.ClientBootstrap();

@@ -16,3 +16,6 @@ export const AWS_CONFIG = {
 export const MAX_RETRY = 20;
 
 export const RETRY_WAIT_TIME = 3; //seconds
+
+export const KEY = "./certs/private.key";
+export const CERTIFICATE = "./certs/certificate.pem";
