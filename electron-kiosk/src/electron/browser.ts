@@ -31,7 +31,7 @@ export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => 
   const content = browserWindow.webContents;
   content.on("did-finish-load", () => {
     content.insertCSS(`
-    /* disable selection */
+    /* disable selection */s    
 :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
@@ -43,6 +43,15 @@ input, button, textarea, :focus {
     outline: none;
 }
 
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+ }
+ 
 /* disable image and anchor dragging */
 a:not([draggable=true]), img:not([draggable=true]) {
     -webkit-user-drag: none;
