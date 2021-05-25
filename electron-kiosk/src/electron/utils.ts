@@ -1,4 +1,3 @@
-import { machineId } from "node-machine-id";
 import { hostname } from "os";
 
 export const isJsonString = (string: string): boolean => {
