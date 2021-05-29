@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import { SCREEN_SIZE } from "../constants";
 import { isUrl } from "./utils";
 import axios from "axios";
+const path = require("path");
 
 interface Data {
   data: {
@@ -17,8 +18,18 @@ export const createBrowserWindow = async (): Promise<Electron.BrowserWindow> => 
     ...SCREEN_SIZE,
     frame: false,
     show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      nodeIntegrationInSubFrames: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
-
+  console.log(path.join(__dirname, "preload.js"));
+  browserWindow.loadFile(path.join(__dirname, "index.html"));
+  browserWindow.webContents.openDevTools();
   browserWindow.once("ready-to-show", () => {
     browserWindow.show();
     browserWindow.maximize();
