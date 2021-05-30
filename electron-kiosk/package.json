@@ -1,5 +1,5 @@
 {
-  "name": "secure-electron-template",
+  "name": "mir-kiosk-electron",
   "version": "11.0.0",
   "description": "The best way to build Electron apps with security in mind.",
   "private": true,
@@ -15,27 +15,24 @@
     "pack": "electron-builder --dir",
     "dist": "npm run test && npm run prod-build && electron-builder",
     "dist-mac": "npm run prod-build && electron-builder --mac",
-    "dist-linux": "npm run test && npm run prod-build && electron-builder --linux",
+    "dist-linux": "npm run prod-build && electron-builder --linux",
     "dist-windows": "npm run test && npm run prod-build && electron-builder --windows",
     "dist-all": "npm run test && npm run prod-build && electron-builder --mac --linux --windows",
     "test": "mocha"
   },
   "build": {
-    "productName": "YourProductName",
-    "appId": "com.yourcompany|electron.yourproductname",
+    "productName": "mir-kiosk-electron",
+    "appId": "mir-kiosk-electron",
     "directories": {
       "buildResources": "resources"
     },
     "files": [
       "app/dist/**/*",
       "app/electron/**/*",
-      "app/localization/!(locales)",
       "LICENSE"
     ],
     "extraFiles": [
-      "app/localization/locales/**/*",
-      "license.data",
-      "public.key"
+      "app/localization/locales/**/*"
     ],
     "win": {
       "target": [
@@ -54,26 +51,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reZach/secure-electron-template.git"
+    "url": "git+https://github.com/zhex900/mir-kiosk-electron.git"
   },
   "keywords": [
     "electron",
-    "security",
-    "secure",
-    "template",
     "javascript",
-    "react",
-    "redux",
-    "webpack",
-    "i18n",
-    "boilerplate"
+    "react"
   ],
-  "author": "reZach",
+  "author": "Jake He <zhex900@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/reZach/secure-electron-template/issues"
-  },
-  "homepage": "https://github.com/reZach/secure-electron-template#readme",
   "browserslist": [
     "last 2 Chrome versions"
   ],
@@ -84,14 +70,11 @@
     "@babel/preset-env": "^7.14.1",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@doyensec/electronegativity": "^1.9.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^14.14.34",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
-    "eslint": "^7.6.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.3",
-    "@doyensec/electronegativity": "^1.9.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -101,24 +84,27 @@
     "css-loader": "^5.2.4",
     "css-minimizer-webpack-plugin": "^2.0.0",
     "electron": "^13.0.1",
-    "electron-builder": "^22.10.5",
+    "electron-builder": "^22.11.4",
     "electron-debug": "^3.2.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.3",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.6.0",
     "mocha": "^8.4.0",
+    "prettier": "^2.3.0",
     "style-loader": "^2.0.0",
+    "ts-loader": "^9.2.2",
     "url-loader": "^4.1.1",
     "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^5.7.3",
-    "prettier": "^2.3.0"
+    "webpack-merge": "^5.7.3"
   },
   "dependencies": {
     "aws-iot-device-sdk-v2": "^1.5.0",
     "axios": "^0.21.1",
-    "buffer-image-size": "^0.6.4",
     "jimp": "^0.16.1",
     "pixelmatch": "^5.2.1",
     "pngjs": "^6.0.0",

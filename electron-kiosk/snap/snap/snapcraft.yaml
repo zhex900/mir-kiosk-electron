@@ -43,9 +43,9 @@ parts:
       chmod +x glue/electron.launcher
       npm config set scripts-prepend-node-path true
       npm install --unsafe-perm=true
-      npm run package
+      npm run dist-linux
       ls
-      cp -R ./out/mir-kiosk-electron-linux-* $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron
+      cp -R ./dist/linux-unpacked $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron
       cp -r /root/stage/certs $SNAPCRAFT_PART_INSTALL/mir-kiosk-electron/certs
     stage-packages:
       - libnspr4
