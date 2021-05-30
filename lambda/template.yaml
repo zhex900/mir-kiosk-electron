@@ -19,6 +19,25 @@ Globals:
 #  add S3
 ####
 Resources:
+  validateScreenContent:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: validateScreenContent
+      Description: validate screen content
+      Timeout: 60
+      #      Role: 'arn:aws:iam::305370495358:role/service-role/short-id-role-5v4x97td'
+      Handler: validateScreenContent/function.lambdaHandler
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /validate-screen-content
+            Method: POST
+            Auth:
+              ApiKeyRequired: true # OPTIONAL
+              UsagePlan: # OPTIONAL
+                CreateUsagePlan: PER_API # REQUIRED if UsagePlan property is set. accepted values: PER_API, SHARED, NONE
+
   screenCapture:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
