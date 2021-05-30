@@ -24,9 +24,9 @@ export const lambdaHandler: Handler = async (
           [key: string]: string;
         };
         const keys: Keys = {
-          expected: `${path}/expected.jpeg`,
-          actual: `${path}/actual.jpeg`,
-          difference: `${path}/difference.jpeg`,
+          expected: `${path}/expected.png`,
+          actual: `${path}/actual.png`,
+          difference: `${path}/difference.png`,
         };
         type SignedURLs = {
           [key: string]: string;
