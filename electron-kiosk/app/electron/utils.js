@@ -1,6 +1,6 @@
-import { hostname } from "os";
+const { hostname } = require("os");
 
-export const isJsonString = (string: string): boolean => {
+const isJsonString = (string) => {
   try {
     JSON.parse(string);
   } catch (e) {
@@ -9,7 +9,7 @@ export const isJsonString = (string: string): boolean => {
   return true;
 };
 
-export const isUrl = (string: string): boolean => {
+const isUrl = (string) => {
   try {
     return Boolean(new URL(string));
   } catch (e) {
@@ -17,6 +17,8 @@ export const isUrl = (string: string): boolean => {
   }
 };
 
-export const getDeviceId = (): string => {
+const getDeviceId = () => {
   return hostname().toLocaleLowerCase().replace(/ /g, ".");
 };
+
+module.exports = { getDeviceId, isJsonString, isUrl };
