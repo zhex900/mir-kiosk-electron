@@ -63,6 +63,7 @@ const desktopCapture = (
   desktopCapturer: DesktopCapturer,
   width,
   height,
+  sourceScreen,
   saveImage
 ): void => {
   console.log({ width, height });
@@ -72,7 +73,7 @@ const desktopCapture = (
       console.log(sources);
 
       for (const source of sources) {
-        if (source.name === "Screen 1") {
+        if (source.name === sourceScreen) {
           try {
             const mediaDevices = navigator.mediaDevices as MediaDevices;
             const stream = await mediaDevices.getUserMedia({

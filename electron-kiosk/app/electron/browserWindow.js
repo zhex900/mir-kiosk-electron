@@ -118,7 +118,7 @@ const loadURL = async ({ data: { url } }) => {
   }
 };
 
-const desktopCapture = () => {
+const desktopCapture = (sourceScreen) => {
   return new Promise((resolve, reject) => {
     try {
       const { width, height } = screen.getPrimaryDisplay().bounds;
@@ -126,8 +126,10 @@ const desktopCapture = () => {
       browserWindow.webContents.send("takeDesktopCapture", {
         width,
         height,
+        sourceScreen,
       });
       ipcMain.once("desktopCapturedImage", async (event, dataURL) => {
+        console.log("desktopCapturedImage");
         const image = await Jimp.read(
           Buffer.from(dataURL.split(",")[1], "base64")
         );
@@ -152,12 +154,12 @@ const capturePage = async ({ width, height }) => {
   });
 };
 const validateScreenContent = async ({
-  data: { putSignedURLs, threshold },
+  data: { putSignedURLs, threshold, sourceScreen },
 }) => {
   try {
     const { width, height } = screen.getPrimaryDisplay().bounds;
     const images = {
-      actual: await desktopCapture(),
+      actual: await desktopCapture(sourceScreen),
       expected: await capturePage({ width, height }),
       difference: new PNG({ width, height }),
     };

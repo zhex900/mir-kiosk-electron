@@ -12,11 +12,12 @@ export const App: FC = () => {
   useEffect(() => {
     window.electron.ipcOn("takeDesktopCapture", function (event, arg) {
       console.log("Received takeDesktopCapture", arg);
-      const { width, height } = arg;
+      const { width, height, sourceScreen } = arg;
       desktopCapture(
         window.electron.desktopCapturer,
         width,
         height,
+        sourceScreen,
         function (image) {
           window.electron.ipcSend("desktopCapturedImage", image);
         }
