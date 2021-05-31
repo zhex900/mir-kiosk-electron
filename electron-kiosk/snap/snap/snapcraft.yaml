@@ -36,6 +36,7 @@ parts:
     after: [ certs ]
     source: https://github.com/zhex900/mir-kiosk-electron.git
     override-build: |
+      git checkout ipc
       cd electron-kiosk
       cp -r snap snap_copy
       rm -rf snap 
