@@ -66,19 +66,6 @@ app.on("web-contents-created", (event, contents) => {
   // }
   // });
 
-  contents.on("will-redirect", (contentsEvent, navigationUrl) => {
-    const parsedUrl = new URL(navigationUrl);
-    const validOrigins = [];
-
-    // Log and prevent the app from redirecting to a new page
-    if (!validOrigins.includes(parsedUrl.origin)) {
-      console.error(
-        `The application tried to redirect to the following address: '${navigationUrl}'. This attempt was blocked.`
-      );
-
-      contentsEvent.preventDefault();
-    }
-  });
 
   // https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
   contents.on(
