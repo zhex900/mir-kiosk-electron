@@ -82,7 +82,7 @@ const createBrowserWindow = async (isDev) => {
     browserWindow.setBrowserView(browserView);
     browserView.setBackgroundColor("#000");
     browserView.setBounds({ x: 0, y: 0, width, height });
-    browserView.webContents.loadURL(DEFAULT_URL);
+    browserView.webContents.loadURL(process.env.KIOSK_URL || DEFAULT_URL);
   });
 
   // // const { width, height } = screen.getPrimaryDisplay().workAreaSize;
