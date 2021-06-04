@@ -1,4 +1,4 @@
-const nodeExternals = require("webpack-node-externals");
+// const nodeExternals = require("webpack-node-externals");
 require("dotenv").config();
 
 module.exports = {
@@ -18,5 +18,5 @@ module.exports = {
     __dirname: true,
   },
   target: "node", // in order to ignore built-in modules like path, fs, etc.
-  externals: [nodeExternals()], // in order to ignore all modules
+  // externals: [nodeExternals()], // in order to ignore all modules
 };
