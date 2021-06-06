@@ -2,18 +2,21 @@
   "compilerOptions": {
     "allowJs": true,
     "module": "commonjs",
-    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+//    "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "jsx": "react"
   },
   "include": [
     "src/**/*"
-  ],
+  ]
 }

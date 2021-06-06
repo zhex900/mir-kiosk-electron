@@ -1,13 +1,6 @@
-.aws-sam
-samconfig.toml
-examples
-.aws.json
-dist
-.idea
 # Logs
 logs
 *.log
-packages
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -94,8 +87,3 @@ typings/
 
 # Electron-Forge
 out/
-/electron-kiosk/snap/*.snap
-/electron-kiosk/certs/certificate.pem
-/electron-kiosk/certs/private.key
-/electron-kiosk/snap/certs/certificate.pem
-/electron-kiosk/snap/certs/private.key
