@@ -1,4 +1,4 @@
-import { getDeviceId, isJsonString } from "./utils";
+import { getDefaultMacAddress, getDeviceId, isJsonString } from "./utils";
 
 import { TextDecoder } from "util";
 
@@ -50,20 +50,23 @@ const waitForSeconds = (seconds) =>
 
 const initConnection = async () => {
   deviceId = getDeviceId();
+  const macAddress = await getDefaultMacAddress();
   console.log({ deviceId }, process.env.IOT_ENDPOINT);
   return new Promise((resolve, reject) => {
     if (!process.env.IOT_ENDPOINT) {
       reject("No IoT endpoint");
     }
-    const config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
-      CERTIFICATE,
-      KEY
-    )
-      .with_clean_session(true)
-      .with_keep_alive_seconds(30)
-      .with_client_id(deviceId)
-      .with_endpoint(process.env.IOT_ENDPOINT)
-      .build();
+
+    const config =
+      iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
+        CERTIFICATE,
+        KEY
+      )
+        .with_clean_session(true)
+        .with_keep_alive_seconds(30)
+        .with_client_id(macAddress) // registered thing name
+        .with_endpoint(process.env.IOT_ENDPOINT)
+        .build();
 
     const clientBootstrap = new io.ClientBootstrap();
 

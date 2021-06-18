@@ -8,6 +8,9 @@ import { connect, disconnect, subscribe } from "./IoT";
 
 import { app, BrowserWindow } from "electron";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const server = require("../express/index");
+
 const isDev = process.env.NODE_ENV === "development";
 
 // This method will be called when Electron has finished
@@ -15,16 +18,16 @@ const isDev = process.env.NODE_ENV === "development";
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   try {
-    const connection = await connect(0); // @TODO retry to connect
+    // const connection = await connect(0); // @TODO retry to connect
     await createBrowserWindow(isDev);
-    if (connection) {
-      await subscribe(loadURL);
-      await subscribe(validateScreenContent);
-    } else {
-      app.quit();
-      // no internet connection
-      process.exit(0);
-    }
+    // if (connection) {
+    //   await subscribe(loadURL);
+    //   await subscribe(validateScreenContent);
+    // } else {
+    //   app.quit();
+    //   // no internet connection
+    //   process.exit(0);
+    // }
   } catch (e) {
     console.log("ready error", { e });
   }

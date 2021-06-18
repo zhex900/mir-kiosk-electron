@@ -73,11 +73,11 @@ export const createBrowserWindow = async (isDev) => {
   browserWindow.once("ready-to-show", () => {
     browserWindow.show();
     browserWindow.maximize();
-    browserView = new BrowserView();
-    browserWindow.setBrowserView(browserView);
-    browserView.setBackgroundColor("#000");
-    browserView.setBounds({ x: 0, y: 0, width, height });
-    browserView.webContents.loadURL(process.env.KIOSK_URL || DEFAULT_URL);
+    // browserView = new BrowserView();
+    // browserWindow.setBrowserView(browserView);
+    // browserView.setBackgroundColor("#000");
+    // browserView.setBounds({ x: 0, y: 0, width, height });
+    // browserView.webContents.loadURL(process.env.KIOSK_URL || DEFAULT_URL);
     console.log("Loading: " + process.env.KIOSK_URL || DEFAULT_URL);
   });
 
