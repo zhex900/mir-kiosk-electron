@@ -8,10 +8,41 @@ import { connect, disconnect, subscribe } from "./IoT";
 
 import { app, BrowserWindow } from "electron";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const server = require("../express/index");
-
 const isDev = process.env.NODE_ENV === "development";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const spawn = require("child_process").spawn;
+// For electron-packager change cwd in spawn to app.getAppPath() and
+// uncomment the app require below
+//app = require('electron').remote.app,
+// node = spawn(".\\node_modules\\node\\bin\\node.exe", ["../express/index"], {
+//   cwd: process.cwd(),
+// });
+// console.log(process.cwd());
+// const node = spawn(
+//   "/Users/jake/.nvm/versions/node/v14.16.1/bin/node",
+//   ["/src/express/index.js"],
+//   {
+//     cwd: process.cwd(),
+//   }
+// );
+
+import { fork } from "child_process";
+const serverProc = fork(
+  require.resolve("../express/index"),
+  ["--key", "value"], // pass to process.argv into child
+  {
+    // options
+  }
+);
+serverProc.on("exit", (code, sig) => {
+  // finishing
+  console.log("exit expresss");
+});
+serverProc.on("error", (error) => {
+  // error handling
+  console.log("express error", error);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
