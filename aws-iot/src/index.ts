@@ -1,59 +1,48 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { getDefaultMacAddress, getDeviceId, isJsonString } = require("./utils");
+import { getDefaultMacAddress, isJsonString } from "./utils";
 
-// import { TextDecoder } from "util";
+import { TextDecoder } from "util";
 
-const { io, iot, mqtt } = require("aws-iot-device-sdk-v2");
+import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 
-// const {
-//   CERTIFICATE,
-//   KEY,
-//   MAX_RETRY,
-//   RETRY_WAIT_TIME,
-// } = require("../constants");
+import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "./constants";
 
-const MAX_RETRY = 20;
-
-const RETRY_WAIT_TIME = 3; //seconds
-
-const KEY = `${process.env.CERT_PATH}/private.key`;
-const CERTIFICATE = `${process.env.CERT_PATH}/certificate.pem`;
 let connection;
 let deviceId;
+const subscriptions = {};
+export const publish = async (channel, payload) => {
+  try {
+    await connection.publish(
+      `${deviceId}/${channel}`,
+      payload,
+      mqtt.QoS.AtLeastOnce
+    );
+  } catch (e) {
+    console.error(e);
+  }
+};
 
-// export const publish = async (channel, payload) => {
-//   try {
-//     await connection.publish(
-//       `${deviceId}/${channel}`,
-//       payload,
-//       mqtt.QoS.AtLeastOnce
-//     );
-//   } catch (e) {
-//     console.error(e);
-//   }
-// };
-//
-// export const subscribe = async (callback) => {
-//   try {
-//     await connection.subscribe(
-//       `${deviceId}/${callback.name}`,
-//       mqtt.QoS.AtLeastOnce,
-//       async (topic, payload) => {
-//         const decoder = new TextDecoder("utf8"); //@TODO move to constants
-//         const message = decoder.decode(new Uint8Array(payload));
-//
-//         console.log(`Message received: topic=${topic} ${message}`);
-//
-//         if (typeof callback === "function") {
-//           const data = isJsonString(message) ? JSON.parse(message) : message;
-//           callback({ deviceId, data });
-//         }
-//       }
-//     );
-//   } catch (e) {
-//     console.error(e);
-//   }
-// };
+export const subscribe = (channel, callback) => {
+  try {
+    connection.subscribe(
+      `${deviceId}/${channel}`,
+      mqtt.QoS.AtLeastOnce,
+      (topic, payload) => {
+        const decoder = new TextDecoder("utf8"); //@TODO move to constants
+        const message = decoder.decode(new Uint8Array(payload));
+
+        console.log(`Message received: topic=${topic} ${message}`);
+
+        if (typeof callback === "function") {
+          const data = isJsonString(message) ? JSON.parse(message) : message;
+          subscriptions[channel] = callback;
+          callback({ deviceId, data });
+        }
+      }
+    );
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 const waitForSeconds = (seconds) =>
   new Promise((resolve) => {
@@ -61,8 +50,8 @@ const waitForSeconds = (seconds) =>
   });
 
 const initConnection = async () => {
-  deviceId = getDeviceId();
   const macAddress = await getDefaultMacAddress();
+  deviceId = macAddress;
   console.log({ deviceId }, process.env.IOT_ENDPOINT);
   return new Promise((resolve, reject) => {
     if (!process.env.IOT_ENDPOINT) {
@@ -96,6 +85,10 @@ const initConnection = async () => {
     });
     connection.on("resume", async (code, session) => {
       console.log(`Resumed: rc: ${code} existing session: ${session}`);
+      // re subscribe
+      Object.keys(subscriptions).forEach((channel) =>
+        subscribe(channel, subscriptions[channel])
+      );
     });
     connection.on("disconnect", () => {
       console.log("Disconnected");
@@ -108,7 +101,7 @@ const initConnection = async () => {
   });
 };
 
-const connect = async (retryAttempt) => {
+export const connect = async (retryAttempt) => {
   const connection = await initConnection();
   if (!connection && retryAttempt < MAX_RETRY) {
     console.log("RETRY", retryAttempt);
@@ -117,7 +110,5 @@ const connect = async (retryAttempt) => {
   }
   return connection;
 };
-module.exports = {
-  connect,
-};
-// export const disconnect = () => connection.disconnect();
+
+export const disconnect = () => connection.disconnect();

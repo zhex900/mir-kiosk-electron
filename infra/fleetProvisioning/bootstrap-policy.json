@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish",
+        "iot:Receive"
+      ],
+      "Resource": [
+        "arn:aws:iot:ap-southeast-2:305370495358:topic/$aws/certificates/create/*",
+        "arn:aws:iot:ap-southeast-2:305370495358:topic/$aws/provisioning-templates/fleet-provisioning-template/provision/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        "arn:aws:iot:ap-southeast-2:305370495358:topicfilter/$aws/certificates/create/*",
+        "arn:aws:iot:ap-southeast-2:305370495358:topicfilter/$aws/provisioning-templates/fleet-provisioning-template/provision/*"
+      ]
+    }
+  ]
+}

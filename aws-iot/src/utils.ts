@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { hostname } = require("os");
-const si = require("systeminformation");
+import si from "systeminformation";
 
-const isJsonString = (string) => {
+export const isJsonString = (string: string): boolean => {
   try {
     JSON.parse(string);
   } catch (e) {
@@ -11,7 +9,7 @@ const isJsonString = (string) => {
   return true;
 };
 
-const isUrl = (string) => {
+export const isUrl = (string: string): boolean => {
   try {
     return Boolean(new URL(string));
   } catch (e) {
@@ -19,11 +17,7 @@ const isUrl = (string) => {
   }
 };
 
-const getDeviceId = () => {
-  return hostname().toLocaleLowerCase().replace(/ /g, ".");
-};
-
-const getDefaultMacAddress = async () => {
+export const getDefaultMacAddress = async (): Promise<string> => {
   const defaultInterface = await si.networkInterfaceDefault();
   const networkInterfaces = await si.networkInterfaces();
 
@@ -32,10 +26,4 @@ const getDefaultMacAddress = async () => {
   ).mac;
   console.log(mac);
   return mac;
-};
-module.exports = {
-  getDefaultMacAddress,
-  isJsonString,
-  getDeviceId,
-  isUrl,
 };

@@ -4,61 +4,33 @@ import {
   validateScreenContent,
 } from "./browserWindow";
 
-import { connect, disconnect, subscribe } from "./IoT";
-
+import { connect, disconnect, subscribe } from "../../../aws-iot/src";
+import { platform } from "os";
 import { app, BrowserWindow } from "electron";
-
+import { setSubscriptions } from "./ipcSockets";
 const isDev = process.env.NODE_ENV === "development";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const spawn = require("child_process").spawn;
-// For electron-packager change cwd in spawn to app.getAppPath() and
-// uncomment the app require below
-//app = require('electron').remote.app,
-// node = spawn(".\\node_modules\\node\\bin\\node.exe", ["../express/index"], {
-//   cwd: process.cwd(),
-// });
-// console.log(process.cwd());
-// const node = spawn(
-//   "/Users/jake/.nvm/versions/node/v14.16.1/bin/node",
-//   ["/src/express/index.js"],
-//   {
-//     cwd: process.cwd(),
-//   }
-// );
-
-import { fork } from "child_process";
-const serverProc = fork(
-  require.resolve("../express/index"),
-  ["--key", "value"], // pass to process.argv into child
-  {
-    // options
-  }
-);
-serverProc.on("exit", (code, sig) => {
-  // finishing
-  console.log("exit expresss");
-});
-serverProc.on("error", (error) => {
-  // error handling
-  console.log("express error", error);
-});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   try {
-    // const connection = await connect(0); // @TODO retry to connect
+    if (platform() === "win32") {
+      setSubscriptions([loadURL, validateScreenContent]);
+    } else {
+      const connection = await connect(0); // @TODO retry to connect
+
+      if (connection) {
+        await subscribe(loadURL.name, loadURL);
+        await subscribe(validateScreenContent.name, validateScreenContent);
+      } else {
+        app.quit();
+        // no internet connection
+        process.exit(0);
+      }
+    }
     await createBrowserWindow(isDev);
-    // if (connection) {
-    //   await subscribe(loadURL);
-    //   await subscribe(validateScreenContent);
-    // } else {
-    //   app.quit();
-    //   // no internet connection
-    //   process.exit(0);
-    // }
+    //if mac
   } catch (e) {
     console.log("ready error", { e });
   }

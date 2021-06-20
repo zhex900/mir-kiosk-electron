@@ -95,6 +95,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.17.1",
     "jimp": "^0.16.1",
+    "node-ipc": "^9.1.4",
     "pixelmatch": "^5.2.1",
     "pngjs": "^6.0.0",
     "react": "^17.0.2",
