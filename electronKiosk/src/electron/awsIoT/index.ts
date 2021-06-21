@@ -9,7 +9,7 @@ export const startAwsIoT = async () => {
     setSubscriptions(subscriptions);
   } else {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { setSubscriptions } = require("../../../awsIoT/src");
+    const { setSubscriptions } = require("awsIoT");
     setSubscriptions(subscriptions);
   }
 };
