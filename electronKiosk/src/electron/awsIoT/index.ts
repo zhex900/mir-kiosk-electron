@@ -1,5 +1,5 @@
 import { platform } from "os";
-import { setSubscriptions } from "./windowSockets";
+import { setSubscriptions } from "./windowsSockets";
 import { loadURL, validateScreenContent } from "../browserWindow";
 
 const subscriptions = [loadURL, validateScreenContent];
