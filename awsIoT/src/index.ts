@@ -1,14 +1,14 @@
-import { getDefaultMacAddress, getDeviceId, isJsonString } from "./utils";
+import { getDefaultMacAddress, isJsonString } from "./utils";
 
 import { TextDecoder } from "util";
 
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 
-import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "../constants";
+import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "./constants";
 
 let connection;
 let deviceId;
-
+const subscriptions = {};
 export const publish = async (channel, payload) => {
   try {
     await connection.publish(
@@ -21,12 +21,12 @@ export const publish = async (channel, payload) => {
   }
 };
 
-export const subscribe = async (callback) => {
+export const subscribe = (channel, callback) => {
   try {
-    await connection.subscribe(
-      `${deviceId}/${callback.name}`,
+    connection.subscribe(
+      `${deviceId}/${channel}`,
       mqtt.QoS.AtLeastOnce,
-      async (topic, payload) => {
+      (topic, payload) => {
         const decoder = new TextDecoder("utf8"); //@TODO move to constants
         const message = decoder.decode(new Uint8Array(payload));
 
@@ -34,6 +34,7 @@ export const subscribe = async (callback) => {
 
         if (typeof callback === "function") {
           const data = isJsonString(message) ? JSON.parse(message) : message;
+          subscriptions[channel] = callback;
           callback({ deviceId, data });
         }
       }
@@ -49,8 +50,8 @@ const waitForSeconds = (seconds) =>
   });
 
 const initConnection = async () => {
-  deviceId = getDeviceId();
   const macAddress = await getDefaultMacAddress();
+  deviceId = macAddress;
   console.log({ deviceId }, process.env.IOT_ENDPOINT);
   return new Promise((resolve, reject) => {
     if (!process.env.IOT_ENDPOINT) {
@@ -84,6 +85,10 @@ const initConnection = async () => {
     });
     connection.on("resume", async (code, session) => {
       console.log(`Resumed: rc: ${code} existing session: ${session}`);
+      // re subscribe
+      Object.keys(subscriptions).forEach((channel) =>
+        subscribe(channel, subscriptions[channel])
+      );
     });
     connection.on("disconnect", () => {
       console.log("Disconnected");
@@ -107,3 +112,13 @@ export const connect = async (retryAttempt) => {
 };
 
 export const disconnect = () => connection.disconnect();
+
+export const setSubscriptions = async (subscriptions) => {
+  const connection = await connect(0); // @TODO retry to connect
+
+  if (connection) {
+    subscriptions.forEach((subscription) =>
+      subscribe(subscription.name, subscription)
+    );
+  }
+};

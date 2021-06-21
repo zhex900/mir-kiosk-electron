@@ -1,13 +1,7 @@
-import {
-  createBrowserWindow,
-  loadURL,
-  validateScreenContent,
-} from "./browserWindow";
-
-import { connect, disconnect, subscribe } from "../../../aws-iot/src";
-import { platform } from "os";
+import { createBrowserWindow } from "./browserWindow";
+import { startAwsIoT } from "./awsIoT";
 import { app, BrowserWindow } from "electron";
-import { setSubscriptions } from "./ipcSockets";
+
 const isDev = process.env.NODE_ENV === "development";
 
 // This method will be called when Electron has finished
@@ -15,22 +9,8 @@ const isDev = process.env.NODE_ENV === "development";
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   try {
-    if (platform() === "win32") {
-      setSubscriptions([loadURL, validateScreenContent]);
-    } else {
-      const connection = await connect(0); // @TODO retry to connect
-
-      if (connection) {
-        await subscribe(loadURL.name, loadURL);
-        await subscribe(validateScreenContent.name, validateScreenContent);
-      } else {
-        app.quit();
-        // no internet connection
-        process.exit(0);
-      }
-    }
+    startAwsIoT();
     await createBrowserWindow(isDev);
-    //if mac
   } catch (e) {
     console.log("ready error", { e });
   }

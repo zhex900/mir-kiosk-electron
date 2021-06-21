@@ -1,10 +1,4 @@
 import ipc from "node-ipc";
-/***************************************\
- *
- * You should start both hello and world
- * then you will see them communicating.
- *
- * *************************************/
 
 ipc.config.id = "aws-iot-sockets";
 ipc.config.retry = 1500;

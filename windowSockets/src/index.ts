@@ -1,6 +1,6 @@
 import ipc from "node-ipc";
 
-import { connect, disconnect, subscribe } from "../../aws-iot/src";
+import { connect, disconnect, subscribe } from "../../awsIoT/src";
 
 // do cert provisioning
 
