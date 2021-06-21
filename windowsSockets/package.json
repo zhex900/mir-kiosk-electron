@@ -10,9 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-iot-device-sdk-v2": "^1.5.2",
-    "node-ipc": "^9.1.4",
-    "systeminformation": "^5.7.7"
+    "node-ipc": "^9.1.4"
   },
   "devDependencies": {
     "@types/node": "^15.12.2",

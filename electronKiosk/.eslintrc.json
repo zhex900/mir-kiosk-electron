@@ -6,6 +6,12 @@
   },
   "settings": {
     "import/resolver": {
+      "alias": {
+        "map": [
+          ["common", "../common/src"]
+        ],
+        "extensions": [".ts", ".js", ".jsx", ".json"]
+      },
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
@@ -16,7 +22,8 @@
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended",
       "plugin:import/errors",
-      "plugin:import/warnings"
+      "plugin:import/warnings",
+      "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser"
 }

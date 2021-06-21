@@ -1,8 +1,8 @@
 import { BrowserView, BrowserWindow, ipcMain, screen } from "electron";
-import { isUrl } from "./utils";
+import { isUrl } from "common/utils";
 import axios from "axios";
 import Jimp from "jimp";
-import { DEFAULT_URL } from "../constants";
+import { DEFAULT_URL } from "common/constants";
 import { PNG } from "pngjs";
 import pixelMatch from "pixelmatch";
 // interface Data {

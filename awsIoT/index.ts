@@ -1,10 +1,10 @@
-import { getDefaultMacAddress, isJsonString } from "./utils";
+import { getDefaultMacAddress, isJsonString } from "../common/src/utils";
 
 import { TextDecoder } from "util";
 
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 
-import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "./constants";
+import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "../common/src/constants";
 
 let connection;
 let deviceId;
