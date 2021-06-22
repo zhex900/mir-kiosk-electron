@@ -1,15 +1,23 @@
-import { getDefaultMacAddress, isJsonString } from "../common/src/utils";
-
+import { getDefaultMacAddress, isJsonString, fileExists } from "common/utils";
 import { TextDecoder } from "util";
-
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
+import {
+  DEVICE_CERTIFICATE_PATH,
+  DEVICE_KEY_PATH,
+  MAX_RETRY,
+  RETRY_WAIT_TIME,
+  IOT_ENDPOINT,
+} from "common/constants";
+import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
+import startProvisioning from "./provisioning";
 
-import { CERTIFICATE, KEY, MAX_RETRY, RETRY_WAIT_TIME } from "../common/src/constants";
+let connection: MqttClientConnection;
+let deviceId: string;
+type Subscriptions = { [channel: string]: any };
 
-let connection;
-let deviceId;
-const subscriptions = {};
-export const publish = async (channel, payload) => {
+const subscriptions: Subscriptions = {};
+
+export const publish = async (channel: string, payload: mqtt.Payload) => {
   try {
     await connection.publish(
       `${deviceId}/${channel}`,
@@ -21,7 +29,10 @@ export const publish = async (channel, payload) => {
   }
 };
 
-export const subscribe = (channel, callback) => {
+export const subscribe = (
+  channel: string,
+  callback: (arg0: { deviceId: string; data: any }) => void
+) => {
   try {
     connection.subscribe(
       `${deviceId}/${channel}`,
@@ -44,12 +55,12 @@ export const subscribe = (channel, callback) => {
   }
 };
 
-const waitForSeconds = (seconds) =>
+const waitForSeconds = (seconds: number) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(1), seconds * 1000);
   });
 
-const initConnection = async () => {
+const initConnection = async (): Promise<MqttClientConnection> => {
   const macAddress = await getDefaultMacAddress();
   deviceId = macAddress;
   console.log({ deviceId }, process.env.IOT_ENDPOINT);
@@ -60,13 +71,13 @@ const initConnection = async () => {
 
     const config =
       iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
-        CERTIFICATE,
-        KEY
+        DEVICE_CERTIFICATE_PATH,
+        DEVICE_KEY_PATH
       )
         .with_clean_session(true)
         .with_keep_alive_seconds(30)
         .with_client_id(macAddress) // registered thing name
-        .with_endpoint(process.env.IOT_ENDPOINT)
+        .with_endpoint(IOT_ENDPOINT)
         .build();
 
     const clientBootstrap = new io.ClientBootstrap();
@@ -95,13 +106,15 @@ const initConnection = async () => {
     });
     connection.on("error", (error) => {
       console.log("connection failed", error);
-      resolve(null);
+      resolve(connection);
     });
     connection.connect();
   });
 };
 
-export const connect = async (retryAttempt) => {
+export const connect = async (
+  retryAttempt: number
+): Promise<MqttClientConnection> => {
   const connection = await initConnection();
   if (!connection && retryAttempt < MAX_RETRY) {
     console.log("RETRY", retryAttempt);
@@ -113,7 +126,7 @@ export const connect = async (retryAttempt) => {
 
 export const disconnect = () => connection.disconnect();
 
-export const setSubscriptions = async (subscriptions) => {
+export const setSubscriptions = async (subscriptions: any[]) => {
   const connection = await connect(0); // @TODO retry to connect
 
   if (connection) {
@@ -121,4 +134,15 @@ export const setSubscriptions = async (subscriptions) => {
       subscribe(subscription.name, subscription)
     );
   }
+};
+
+export const initProvisioning = async (): Promise<void> => {
+  if (
+    (await fileExists(DEVICE_CERTIFICATE_PATH)) &&
+    (await fileExists(DEVICE_CERTIFICATE_PATH))
+  ) {
+    return;
+  }
+  deviceId = await getDefaultMacAddress();
+  await startProvisioning(deviceId, IOT_ENDPOINT, true);
 };

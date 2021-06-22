@@ -1,8 +1,8 @@
 {
-    "name": "pub-sub",
+    "name": "fleet-provisioning",
     "version": "1.0.0",
-    "description": "NodeJS IoT SDK v2 Pub Sub Sample",
-    "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
+    "description": "NodeJS IoT SDK v2 Fleet Provisioning Sample",
+    "homepage": "https://github.com/awslabs/aws-iot-device-sdk-js-v2",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
@@ -17,11 +17,12 @@
         "prepare": "npm run tsc"
     },
     "devDependencies": {
-        "@types/node": "^10.17.50",
+        "@types/node": "^15.12.2",
         "typescript": "^3.9.7"
     },
     "dependencies": {
-        "aws-iot-device-sdk-v2": "../../../",
-        "yargs": "^14.2.3"
+        "aws-iot-device-sdk-v2": "1.5.1",
+        "systeminformation": "^5.7.6",
+        "yargs": "^14.0.0"
     }
 }

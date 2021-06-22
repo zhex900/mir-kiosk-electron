@@ -94,8 +94,8 @@ typings/
 
 # Electron-Forge
 out/
-/electron-kiosk/snap/*.snap
-/electron-kiosk/certs/certificate.pem
-/electron-kiosk/certs/private.key
-/electron-kiosk/snap/certs/certificate.pem
-/electron-kiosk/snap/certs/private.key
+/electronKiosk/snap/*.snap
+/awsIoT/certs/device/*.pem
+/awsIoT/certs/device/*.key
+/awsIoT/certs/tmp/*.pem
+/awsIoT/certs/tmp/*.key
