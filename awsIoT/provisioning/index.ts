@@ -189,6 +189,7 @@ export default async (
 
     let config_builder = null;
 
+    console.log({ CLAIM_CERT_PATH });
     config_builder =
       iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
         CLAIM_CERT_PATH,

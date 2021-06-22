@@ -10,6 +10,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "common/*": ["../common/src/*"]
+    }
   },
   "include": [
     "src/**/*"

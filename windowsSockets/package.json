@@ -2,20 +2,35 @@
   "name": "ipc",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/windowsSockets/src/index.js",
+  "bin": "dist/windowsSockets/src/index.js",
   "scripts": {
-    "start": "tsc && node dist/ipc-sockets/src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/windowsSockets/src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pkgWin": "pkg ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-ipc": "^9.1.4"
+    "aws-iot-device-sdk-v2": "^1.5.2",
+    "module-alias": "^2.2.2",
+    "node-ipc": "^9.1.4",
+    "systeminformation": "^5.7.7"
   },
   "devDependencies": {
     "@types/node": "^15.12.2",
     "nodemon": "^2.0.7",
+    "pkg": "^5.2.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
+  },
+  "_moduleAliases": {
+    "common": "dist/common/src"
+  },
+  "pkg": {
+    "scripts": "dist/**/**/*.js",
+    "assets": "dist/**/*",
+    "targets": [ "node14-win-x64" ],
+    "outputPath": "build"
   }
 }

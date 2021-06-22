@@ -137,6 +137,7 @@ export const setSubscriptions = async (subscriptions: any[]) => {
 };
 
 export const initProvisioning = async (): Promise<void> => {
+  console.log({ DEVICE_CERTIFICATE_PATH });
   if (
     (await fileExists(DEVICE_CERTIFICATE_PATH)) &&
     (await fileExists(DEVICE_CERTIFICATE_PATH))
