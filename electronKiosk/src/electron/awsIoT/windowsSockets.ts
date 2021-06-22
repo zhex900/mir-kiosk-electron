@@ -4,16 +4,17 @@ ipc.config.id = "aws-iot-sockets";
 ipc.config.retry = 1500;
 
 const subscribe = (subscriptions) => {
+  console.log("sub", Object.keys(subscriptions));
   ipc.of.iot.emit(
     "awsIoTSubscription", //any event or message type your server listens for
-    subscriptions.map((subscription) => subscription.name)
+    Object.keys(subscriptions)
   );
-  subscriptions.forEach((subscription) =>
+  Object.keys(subscriptions).forEach((subscription) =>
     ipc.of.iot.on(
-      `awsIoTSubscription/${subscription.name}`, //any event or message type your server listens for
+      `awsIoTSubscription/${subscription}`, //any event or message type your server listens for
       function (data) {
-        ipc.log("got a message from : ", subscription.name, data);
-        subscription(data);
+        ipc.log("got a message from : ", subscription, data);
+        subscriptions[subscription](data);
       }
     )
   );
@@ -22,11 +23,11 @@ const subscribe = (subscriptions) => {
 export const setSubscriptions = (subscriptions) => {
   ipc.connectTo("iot", function () {
     ipc.of.iot.on("connect", function () {
-      ipc.log("## connected to world ##", ipc.config.delay);
+      ipc.log("## connected to iot ##", ipc.config.delay);
       subscribe(subscriptions);
     });
     ipc.of.iot.on("disconnect", function () {
-      ipc.log("disconnected from world");
+      ipc.log("disconnected from iot");
     });
   });
 };
