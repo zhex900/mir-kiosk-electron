@@ -18,6 +18,7 @@ claim cert
 - build windowsSockets into exe
 - test windows build, use a bat file.
 - linux snap build
+- setup lerna
 
 - add logging
 - device shadwo
