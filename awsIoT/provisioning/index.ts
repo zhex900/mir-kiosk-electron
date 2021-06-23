@@ -6,7 +6,7 @@ import {
   TEMPLATE_NAME,
   DEVICE_KEY_PATH,
   DEVICE_CERTIFICATE_PATH,
-} from "common/constants";
+} from "../../common/src/constants";
 import fs from "fs";
 
 async function acquireDeviceCerts(identity: iotidentity.IotIdentityClient) {

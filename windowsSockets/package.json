@@ -7,19 +7,23 @@
   "scripts": {
     "start": "tsc && node dist/windowsSockets/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pkgWin": "pkg ."
+    "pkgWin": "pkg . -t host",
+    "postinstall": "patch-package"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-crt": "^1.8.1",
     "aws-iot-device-sdk-v2": "^1.5.2",
     "module-alias": "^2.2.2",
     "node-ipc": "^9.1.4",
     "systeminformation": "^5.7.7"
   },
   "devDependencies": {
+    "@ef-carbon/tspm": "^2.2.5",
     "@types/node": "^15.12.2",
     "nodemon": "^2.0.7",
+    "patch-package": "^6.4.7",
     "pkg": "^5.2.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
@@ -28,9 +32,12 @@
     "common": "dist/common/src"
   },
   "pkg": {
-    "scripts": "dist/**/**/*.js",
-    "assets": "dist/**/*",
-    "targets": [ "node14-win-x64" ],
+    "assets": [
+      "node_modules/aws-crt/dist/bin"
+    ],
+    "targets": [
+      "node14-win-x64"
+    ],
     "outputPath": "build"
   }
 }

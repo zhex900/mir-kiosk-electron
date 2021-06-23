@@ -1,4 +1,8 @@
-import { getDefaultMacAddress, isJsonString, fileExists } from "common/utils";
+import {
+  getDefaultMacAddress,
+  isJsonString,
+  fileExists,
+} from "../common/src/utils";
 import { TextDecoder } from "util";
 import { io, iot, mqtt } from "aws-iot-device-sdk-v2";
 import {
@@ -7,7 +11,7 @@ import {
   MAX_RETRY,
   RETRY_WAIT_TIME,
   IOT_ENDPOINT,
-} from "common/constants";
+} from "../common/src/constants";
 import { MqttClientConnection } from "aws-crt/dist/native/mqtt";
 import startProvisioning from "./provisioning";
 
