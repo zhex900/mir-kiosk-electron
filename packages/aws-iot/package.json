@@ -1,5 +1,5 @@
 {
-    "name": "@kiosk-app/aws-iot",
+    "name": "@pam-kiosk-app/aws-iot",
     "version": "1.0.0",
     "description": "AWS IoT Library",
     "main": "./dist/index.js",

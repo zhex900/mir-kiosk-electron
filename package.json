@@ -1,5 +1,5 @@
 {
-  "name": "kiosk-app",
+  "name": "pam-kiosk-app",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -7,9 +7,9 @@
   "scripts": {
     "clean": "lerna clean --yes && rimraf dist && rimraf node_modules",
     "install": "lerna exec yarn install",
-    "dev:kiosk": "yarn workspace @kiosk-app/kiosk start",
-    "dev:aws-iot-server": "yarn workspace @kiosk-app/aws-iot-server start",
-    "dev:win": "concurrently \"yarn workspace @kiosk-app/aws-iot-server start\" \"yarn workspace @kiosk-app/kiosk start\"",
+    "dev:kiosk": "yarn workspace @pam-kiosk-app/kiosk-app start",
+    "dev:aws-iot-server": "yarn workspace @pam-kiosk-app/aws-iot-server start",
+    "dev:win": "concurrently \"yarn workspace @pam-kiosk-app/aws-iot-server start\" \"yarn workspace @pam-kiosk-app/kiosk-app start\"",
     "postinstall": "patch-package",
     "build:kiosk": ""
   },

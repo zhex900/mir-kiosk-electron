@@ -1,5 +1,5 @@
 {
-  "name": "@kiosk-app/common",
+  "name": "@pam-kiosk-app/common",
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",

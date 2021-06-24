@@ -1,5 +1,5 @@
 {
-  "name": "@kiosk-app/aws-iot-server",
+  "name": "@pam-kiosk-app/aws-iot-server",
   "version": "1.0.0",
   "description": "",
   "main": "dist/aws-iot-server/src/index.js",
