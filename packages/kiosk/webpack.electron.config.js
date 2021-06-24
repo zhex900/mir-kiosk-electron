@@ -15,7 +15,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
     alias: {
-      awsIoT: path.resolve(__dirname, "../awsIoT"),
+      awsIoT: path.resolve(__dirname, "../aws-iot"),
       common: path.resolve(__dirname, "../common/src")
     }
   },

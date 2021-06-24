@@ -1,14 +1,24 @@
 {
-  "name": "root",
+  "name": "kiosk-app",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "lerna clean --yes && rimraf dist && rimraf node_modules",
+    "install": "lerna exec yarn install",
+    "dev:kiosk": "yarn workspace @kiosk-app/kiosk start",
+    "dev:aws-iot-server": "yarn workspace @kiosk-app/aws-iot-server start",
+    "dev:win": "pm2 start ./ecosystem.config.js",
+    "postinstall": "patch-package",
+    "build:kiosk": ""
+  },
   "devDependencies": {
-    "@types/react": "^17.0.9",
-    "@types/react-dom": "^17.0.6",
     "lerna": "^4.0.0",
-    "patch-package": "^6.4.7"
+    "patch-package": "^6.4.7",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "pm2": "^5.1.0"
   }
 }

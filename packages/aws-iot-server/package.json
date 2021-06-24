@@ -1,0 +1,28 @@
+{
+  "name": "@kiosk-app/aws-iot-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/aws-iot-server/src/index.js",
+  "bin": "dist/aws-iot-server/src/index.js",
+  "scripts": {
+    "start": "tsc && cpy ../aws-iot/certs/claim dist/aws-iot/certs/claim && cpy ../aws-iot/certs/device dist/aws-iot/certs/device && node dist/aws-iot-server/src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "patch-package"
+  },
+  "private": true,
+  "dependencies": {
+    "aws-iot-device-sdk-v2": "^1.5.2",
+    "node-ipc": "^9.1.4",
+    "systeminformation": "^5.7.7"
+  },
+  "devDependencies": {
+    "module-alias": "^2.2.2",
+    "@types/node": "^15.12.2",
+    "cpy-cli": "^3.1.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  },
+  "_moduleAliases": {
+    "common": "dist/common/src"
+  }
+}

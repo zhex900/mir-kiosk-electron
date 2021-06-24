@@ -7,7 +7,6 @@ dist
 # Logs
 logs
 *.log
-packages
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -94,8 +93,8 @@ typings/
 
 # Electron-Forge
 out/
-/electronKiosk/snap/*.snap
-/awsIoT/certs/device/*.pem
-/awsIoT/certs/device/*.key
-/awsIoT/certs/tmp/*.pem
-/awsIoT/certs/tmp/*.key
+packages/kiosk/snap/*.snap
+packages/aws-iot/certs/device/*.pem
+packages/aws-iot/certs/device/*.key
+packages/aws-iot/certs/tmp/*.pem
+packages/aws-iot/certs/tmp/*.key

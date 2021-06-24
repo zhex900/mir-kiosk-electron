@@ -38,6 +38,7 @@ async function acquireDeviceCerts(identity: iotidentity.IotIdentityClient) {
               response.privateKey
             );
 
+            console.log({DEVICE_KEY_PATH})
             fs.writeFileSync(DEVICE_KEY_PATH, response.privateKey || "");
             fs.writeFileSync(
               DEVICE_CERTIFICATE_PATH,
@@ -177,7 +178,7 @@ async function registerThing(
 export default async (
   deviceId: string,
   iotEndpoint: string,
-  debug: boolean = false
+  debug = false
 ) => {
   if (debug) {
     const level: io.LogLevel = parseInt(io.LogLevel[5]);
@@ -215,7 +216,7 @@ export default async (
     console.log("result", result);
 
     //Keys workflow
-    let token = await acquireDeviceCerts(identity);
+    const token = await acquireDeviceCerts(identity);
     await registerThing(identity, token as string, deviceId);
 
     await connection.disconnect();

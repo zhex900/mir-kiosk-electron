@@ -1,0 +1,19 @@
+{
+    "name": "@kiosk-app/aws-iot",
+    "version": "1.0.0",
+    "description": "AWS IoT Library",
+    "main": "./dist/index.js",
+    "scripts": {
+        "tsc": "tsc",
+        "prepare": "npm run tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^15.12.2",
+        "typescript": "^3.9.7"
+    },
+    "dependencies": {
+        "aws-iot-device-sdk-v2": "1.5.1",
+        "systeminformation": "^5.7.6"
+    },
+    "private": true
+}

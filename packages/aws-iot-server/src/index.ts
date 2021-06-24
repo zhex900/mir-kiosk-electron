@@ -1,6 +1,6 @@
 import ipc from "node-ipc";
 import "module-alias/register";
-import { connect, initProvisioning, subscribe } from "../../awsIoT";
+import { connect, initProvisioning, subscribe } from "../../aws-iot";
 
 // do cert provisioning
 initProvisioning().then(() => {
