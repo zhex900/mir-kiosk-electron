@@ -9,14 +9,15 @@
     "install": "lerna exec yarn install",
     "dev:kiosk": "yarn workspace @kiosk-app/kiosk start",
     "dev:aws-iot-server": "yarn workspace @kiosk-app/aws-iot-server start",
-    "dev:win": "pm2 start ./ecosystem.config.js",
+    "dev:win": "concurrently \"yarn workspace @kiosk-app/aws-iot-server start\" \"yarn workspace @kiosk-app/kiosk start\"",
     "postinstall": "patch-package",
     "build:kiosk": ""
   },
   "devDependencies": {
     "lerna": "^4.0.0",
     "patch-package": "^6.4.7",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "concurrently": "^6.2.0"
   },
   "dependencies": {
     "pm2": "^5.1.0"
