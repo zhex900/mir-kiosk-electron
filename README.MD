@@ -24,3 +24,43 @@ claim cert
 - device shadwo
 - apis
 - tests
+
+# Windows 10
+
+## Build
+
+- `electronKiosk` is built into `exe`
+- `windoSockets` is transpiled and minified into `js`.
+- Claim certs needs to copied into the right path
+- include `install.ps1` This will install `node`, `pm2` and setup `pm2` as service.
+
+All these files will be `zipped`
+
+## First time installation
+
+- Download the `zipped` filed
+- Unpacked it
+- Run the `install.ps1` as an Administrator
+- Now the electron app should be running on start up
+
+### TODOs
+
+- installation script
+  - terminal UI
+    - show progress bar with logging.
+  - install all the dependencies
+    - `choco`
+    - `node`
+    - `pm2`
+    - ssh daemon
+    - `zerotier-one` for remote ssh access
+    - [newrelic infrastructure agent]()
+    - [AWS IoT secure tunneling](https://docs.aws.amazon.com/iot/latest/developerguide/secure-tunneling-tutorial.html)
+      - [localproxy](https://github.com/aws-samples/aws-iot-securetunneling-localproxy)
+  - if possible add a pam icon
+- build script that will produce the `zipped` file.
+  - build electron app
+  - tsc windowsSockets (maybe add minified version)
+  - copy the claim certificates
+  - copy installation script
+  - release notes

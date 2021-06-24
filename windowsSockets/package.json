@@ -33,7 +33,8 @@
   },
   "pkg": {
     "assets": [
-      "node_modules/aws-crt/dist/bin"
+      "./node_modules/aws-crt/dist/bin/win32-x64/aws-crt-nodejs.node",
+      "./node_modules/aws-crt/dist/include"
     ],
     "targets": [
       "node14-win-x64"
