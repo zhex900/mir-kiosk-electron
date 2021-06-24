@@ -59,8 +59,15 @@ All these files will be `zipped`
       - [localproxy](https://github.com/aws-samples/aws-iot-securetunneling-localproxy)
   - if possible add a pam icon
 - build script that will produce the `zipped` file.
+
   - build electron app
   - tsc windowsSockets (maybe add minified version)
   - copy the claim certificates
   - copy installation script
   - release notes
+
+- uninstall script
+  remove everything installed will
+
+- consider how to do updates
+  - uninstall and install the new zip
